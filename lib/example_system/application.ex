@@ -8,6 +8,7 @@ defmodule ExampleSystem.Application do
            Supervisor.start_link(
              [
                {Phoenix.PubSub, name: ExampleSystem.PubSub},
+               LoadControl.Supervisor,
                ExampleSystem.Metrics,
                ExampleSystem.Service,
                ExampleSystem.Math,

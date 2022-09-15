@@ -48,7 +48,6 @@ defmodule ExampleSystem.Mixfile do
       {:recon, "~> 2.0"},
       {:jason, "~> 1.0"},
       {:swarm, "~> 3.0"},
-      {:load_control, path: "../load_control"},
       {:phoenix_live_view, "~> 0.17.11"},
       {:floki, ">= 0.30.0", only: :test},
       {:esbuild, "~> 0.4", runtime: Mix.env() == :dev},

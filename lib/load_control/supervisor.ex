@@ -1,7 +1,12 @@
-defmodule LoadControl.Application do
-  use Application
+defmodule LoadControl.Supervisor do
+  use Supervisor
 
-  def start(_type, _args) do
+  def start_link(init_arg) do
+    Supervisor.start_link(__MODULE__, init_arg, name: __MODULE__)
+  end
+
+  @impl true
+  def init(_init_arg) do
     children = [
       {PartitionSupervisor,
        child_spec: DynamicSupervisor, name: LoadControl.DynamicSupervisors, partitions: 1000},
@@ -11,6 +16,6 @@ defmodule LoadControl.Application do
     ]
 
     opts = [strategy: :one_for_one, name: LoadControl.Supervisor]
-    Supervisor.start_link(children, opts)
+    Supervisor.init(children, opts)
   end
 end

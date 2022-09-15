@@ -10,9 +10,7 @@ You can use [asdf](https://github.com/asdf-vm/asdf) for that.
 Building:
 
 ```
-cd example_system
-mix deps.get &&
-mix compile
+mix deps.get && mix compile
 ```
 
 Starting for development with live reload:
@@ -32,7 +30,6 @@ Then, you can visit the following links:
 Building and starting for production (in the background):
 
 ```
-cd example_system
 mix release --overwrite
 NODE_NAME=node1 ./_build/prod/rel/example_system/bin/example_system start
 ```
