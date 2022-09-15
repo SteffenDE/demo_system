@@ -52,7 +52,11 @@ defmodule ExampleSystemWeb.Services.Dashboard do
             <ul class="list-inside">
               <%= Enum.map(node.services, fn service -> %>
                 <li class="list-disc">
-                  <%= link(service, to: "#", "phx-click": "invoke_#{service}", class: "text-blue-700 underline") %>
+                  <%= link(service,
+                    to: "#",
+                    "phx-click": "invoke_#{service}",
+                    class: "text-blue-700 underline"
+                  ) %>
                 </li>
               <% end) %>
             </ul>

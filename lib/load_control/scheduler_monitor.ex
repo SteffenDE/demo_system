@@ -23,12 +23,17 @@ defmodule LoadControl.SchedulerMonitor do
       |> Enum.filter(fn {id, _} ->
         id <= :erlang.system_info(:schedulers_online) or
           (id >= :erlang.system_info(:schedulers) + 1 and
-             id < :erlang.system_info(:schedulers) + 1 + :erlang.system_info(:dirty_cpu_schedulers_online))
+             id <
+               :erlang.system_info(:schedulers) + 1 +
+                 :erlang.system_info(:dirty_cpu_schedulers_online))
       end)
-      |> Enum.map(fn {scheduler_id, new_time} -> usage(new_time, Map.fetch!(previous_times, scheduler_id)) end)
+      |> Enum.map(fn {scheduler_id, new_time} ->
+        usage(new_time, Map.fetch!(previous_times, scheduler_id))
+      end)
       |> Enum.unzip()
 
-    total_processors = :erlang.system_info(:schedulers_online) + :erlang.system_info(:dirty_cpu_schedulers_online)
+    total_processors =
+      :erlang.system_info(:schedulers_online) + :erlang.system_info(:dirty_cpu_schedulers_online)
 
     min(
       total_processors * Enum.sum(actives) / Enum.sum(totals),
@@ -41,7 +46,9 @@ defmodule LoadControl.SchedulerMonitor do
 
   def wall_times() do
     :erlang.statistics(:scheduler_wall_time)
-    |> Enum.map(fn {id, active_time, total_time} -> {id, %{active: active_time, total: total_time}} end)
+    |> Enum.map(fn {id, active_time, total_time} ->
+      {id, %{active: active_time, total: total_time}}
+    end)
     |> Enum.into(%{})
   end
 

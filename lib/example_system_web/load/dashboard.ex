@@ -83,40 +83,44 @@ defmodule ExampleSystemWeb.Load.Dashboard do
   defp graph(assigns) do
     ~H"""
     <svg viewBox={"0 0 #{graph_width() + 150} #{graph_height() + 150}"} height="500" class="chart">
-    <style>
-    .title { font-size: 30px;}
-    </style>
+      <style>
+        .title { font-size: 30px;}
+      </style>
 
-    <g transform="translate(100, 100)">
-    <%# title %>
-    <g stroke="black">
-      <text class="title" text-anchor="middle" dominant-baseline="central" x="300" y="-50" fill="black">
-        <%= @title %>
-      </text>
-    </g>
+      <g transform="translate(100, 100)">
+        
+        <g stroke="black">
+          <text
+            class="title"
+            text-anchor="middle"
+            dominant-baseline="central"
+            x="300"
+            y="-50"
+            fill="black"
+          >
+            <%= @title %>
+          </text>
+        </g>
 
-    <%# legends %>
-    <%= for legend <- @graph.legends do %>
-      <g stroke="black">
-        <text text-anchor="end" dominant-baseline="central" x="-20" y={y(legend.at)} fill="black">
-          <%= legend.title %>
-        </text>
+        <%= for legend <- @graph.legends do %>
+          <g stroke="black">
+            <text text-anchor="end" dominant-baseline="central" x="-20" y={y(legend.at)} fill="black">
+              <%= legend.title %>
+            </text>
+          </g>
+
+          <g stroke-width="1" stroke="gray" stroke-dasharray="4">
+            <line x1="0" x2={graph_width()} y1={y(legend.at)} y2={y(legend.at)} />
+          </g>
+        <% end %>
+
+        <g stroke-width="2" stroke="black">
+          <line x1="0" x2="0" y1="0" y2={graph_height()} />
+          <line x1="0" x2={graph_width()} y1={graph_height()} y2={graph_height()} />
+        </g>
+
+        <polyline fill="none" stroke="#0074d9" stroke-width="2" points={data_points(@graph)} />
       </g>
-
-      <g stroke-width="1" stroke="gray" stroke-dasharray="4">
-        <line x1="0" x2={graph_width()} y1={y(legend.at)} y2={y(legend.at)} />
-      </g>
-    <% end %>
-
-    <%# axes %>
-    <g stroke-width="2" stroke="black">
-      <line x1="0" x2="0" y1="0" y2={graph_height()} />
-      <line x1="0" x2={graph_width()} y1={graph_height()} y2={graph_height()} />
-    </g>
-
-    <%# data points %>
-    <polyline fill="none" stroke="#0074d9" stroke-width="2" points={data_points(@graph)} />
-    </g>
     </svg>
     """
   end
@@ -139,7 +143,9 @@ defmodule ExampleSystemWeb.Load.Dashboard do
           <%= number_input(f, :value, autofocus: true) %>
         <% end) %>
 
-        <div>jobs (<span phx-click="highlight_memory" class={highlight_class(@highlighted, "memory")}><%= @metrics.memory_usage %> MB</span>)</div>
+        <div>
+          jobs (<span phx-click="highlight_memory" class={highlight_class(@highlighted, "memory")}><%= @metrics.memory_usage %> MB</span>)
+        </div>
 
         <%= form_for(@schedulers, "", ["phx-submit": "change_schedulers", as: :scheduler_data], fn f -> %>
           <%= number_input(f, :value, autofocus: true) %>
@@ -147,19 +153,21 @@ defmodule ExampleSystemWeb.Load.Dashboard do
         <div>schedulers</div>
       </div>
 
-      <input type="button" value="reset" phx-click="reset"/>
+      <input type="button" value="reset" phx-click="reset" />
 
       <div class="flex mx-auto">
         <div phx-click="highlight_jobs_graph" class={highlight_class(@highlighted, "jobs_graph")}>
           <.graph graph={@metrics.jobs_graph} title="successful jobs/sec" />
         </div>
 
-        <div phx-click="highlight_scheduler_graph" class={highlight_class(@highlighted, "scheduler_graph")}>
+        <div
+          phx-click="highlight_scheduler_graph"
+          class={highlight_class(@highlighted, "scheduler_graph")}
+        >
           <.graph graph={@metrics.scheduler_graph} title="scheduler usage" />
         </div>
       </div>
     </div>
-
     """
   end
 end

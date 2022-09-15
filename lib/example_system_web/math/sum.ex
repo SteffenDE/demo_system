@@ -55,7 +55,7 @@ defmodule ExampleSystemWeb.Math.Sum do
       <%= form_for(@data, "", ["phx-submit": "submit", as: :data], fn f -> %>
         <%= number_input(f, :to, autofocus: true) %>
       <% end) %>
-      <br/>
+      <br />
 
       <div>
         <%= for operation <- @operations do %>
