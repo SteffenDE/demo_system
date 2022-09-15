@@ -15,10 +15,11 @@ defmodule Mix.Tasks.System.Upgrade do
         :ok =
           File.cp!(
             "_build/prod/lib/example_system/ebin/#{module}.beam",
-            "_build/prod/rel/system/lib/example_system-0.0.1/ebin/#{module}.beam"
+            "_build/prod/rel/example_system/lib/example_system-0.0.1/ebin/#{module}.beam"
           )
 
-        {:reloaded, ^module, [^module]} = :rpc.call(:"node1@127.0.0.1", IEx.Helpers, :r, [module])
+        _ = :rpc.call(:"node1@127.0.0.1", :code, :purge, [module])
+        {:module, ^module} = :rpc.call(:"node1@127.0.0.1", :code, :load_file, [module])
       end
     )
 

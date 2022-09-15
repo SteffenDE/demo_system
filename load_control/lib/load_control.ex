@@ -53,15 +53,23 @@ defmodule LoadControl do
     value
   end
 
-  defp set_value(key, value), do: :rpc.multicall(all_nodes(), :ets, :insert, [__MODULE__, {key, value}], :infinity)
+  defp set_value(key, value),
+    do: :rpc.multicall(all_nodes(), :ets, :insert, [__MODULE__, {key, value}], :infinity)
 
   defp all_nodes(), do: Node.list([:this, :visible])
 
+  def do_start_worker(id) do
+    DynamicSupervisor.start_child(
+      {:via, PartitionSupervisor, {LoadControl.DynamicSupervisors, id}},
+      LoadControl.Worker.child_spec(id)
+    )
+  end
+
   defp start_worker({worker_id, target_node}) do
     if target_node == node() do
-      LoadControl.Workers.start_worker(worker_id)
+      do_start_worker(worker_id)
     else
-      :rpc.cast(target_node, LoadControl.Workers, :start_worker, [worker_id])
+      :rpc.cast(target_node, __MODULE__, :do_start_worker, [worker_id])
     end
   end
 end

@@ -1,16 +1,14 @@
 defmodule ExampleSystemWeb.Math.Sum do
-  use Phoenix.LiveView
+  use ExampleSystemWeb, :live_view
 
-  @impl Phoenix.LiveView
-  def render(assigns), do: ExampleSystemWeb.Math.View.render("sum.html", assigns)
+  @impl true
+  def mount(_session, _params, socket), do: {:ok, assign(socket, operations: [], data: data())}
 
-  @impl Phoenix.LiveView
-  def mount(_session, socket), do: {:ok, assign(socket, operations: [], data: data())}
-
-  @impl Phoenix.LiveView
+  @impl true
   def handle_event("submit", %{"data" => %{"to" => str_input}}, socket),
     do: {:noreply, start_sum(socket, str_input)}
 
+  @impl true
   def handle_info({:sum, pid, sum}, socket),
     do: {:noreply, update(socket, :operations, &set_result(&1, pid, sum))}
 
@@ -20,10 +18,17 @@ defmodule ExampleSystemWeb.Math.Sum do
   defp start_sum(socket, str_input) do
     operation =
       case Integer.parse(str_input) do
-        :error -> %{pid: nil, input: str_input, result: "invalid input"}
-        {_input, remaining} when byte_size(remaining) > 0 -> %{pid: nil, input: str_input, result: "invalid input"}
-        # {input, ""} when input <= 0 -> %{pid: nil, input: input, result: "invalid input"}
-        {input, ""} -> do_start_sum(input)
+        :error ->
+          %{pid: nil, input: str_input, result: "invalid input"}
+
+        {_input, remaining} when byte_size(remaining) > 0 ->
+          %{pid: nil, input: str_input, result: "invalid input"}
+
+        # {input, ""} when input <= 0 ->
+        #   %{pid: nil, input: input, result: "invalid input"}
+
+        {input, ""} ->
+          do_start_sum(input)
       end
 
     socket |> update(:operations, &[operation | &1]) |> assign(:data, data())
@@ -42,4 +47,22 @@ defmodule ExampleSystemWeb.Math.Sum do
   end
 
   defp data(), do: Ecto.Changeset.cast({%{}, %{to: :integer}}, %{to: ""}, [:to])
+
+  @impl true
+  def render(assigns) do
+    ~H"""
+    <div class="p-4">
+      <%= form_for(@data, "", ["phx-submit": "submit", as: :data], fn f -> %>
+        <%= number_input(f, :to, autofocus: true) %>
+      <% end) %>
+      <br/>
+
+      <div>
+        <%= for operation <- @operations do %>
+          <div>∑(1..<%= operation.input %>) = <%= operation.result %></div>
+        <% end %>
+      </div>
+    </div>
+    """
+  end
 end

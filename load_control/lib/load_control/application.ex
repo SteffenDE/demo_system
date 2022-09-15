@@ -3,9 +3,10 @@ defmodule LoadControl.Application do
 
   def start(_type, _args) do
     children = [
+      {PartitionSupervisor,
+       child_spec: DynamicSupervisor, name: LoadControl.DynamicSupervisors, partitions: 1000},
       LoadControl.Stats,
       LoadControl.SchedulerMonitor,
-      LoadControl.Workers,
       LoadControl
     ]
 

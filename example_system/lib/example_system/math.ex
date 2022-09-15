@@ -1,5 +1,6 @@
 defmodule ExampleSystem.Math do
-  def child_spec(_), do: Supervisor.child_spec(Task.Supervisor.child_spec(name: __MODULE__), id: __MODULE__)
+  def child_spec(_),
+    do: Supervisor.child_spec(Task.Supervisor.child_spec(name: __MODULE__), id: __MODULE__)
 
   def sum(number) do
     caller = self()
@@ -19,4 +20,6 @@ defmodule ExampleSystem.Math do
 
   defp calc_sum(from, from, sum), do: sum + from
   defp calc_sum(from, to, acc_sum), do: calc_sum(from + 1, to, acc_sum + from)
+
+  # defp calc_sum(n), do: div(n * (n + 1), 2)
 end

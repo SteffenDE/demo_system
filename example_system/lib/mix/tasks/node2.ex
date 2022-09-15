@@ -9,6 +9,8 @@ defmodule Mix.Tasks.System.Node2 do
     Node.set_cookie(:super_secret)
     Node.connect(:"node1@127.0.0.1")
     System.put_env("PORT", "4001")
+    System.put_env("PHX_SERVER", "1")
+
     Mix.Task.run("phx.server")
   end
 end
