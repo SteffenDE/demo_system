@@ -4,7 +4,7 @@
 
 ## Getting started
 
-Requires Erlang, Elixir, and node.js, as specified in the [.tool-versions](./.tool-versions) file.
+Requires Erlang and Elixir, as specified in the [.tool-versions](./.tool-versions) file.
 You can use [asdf](https://github.com/asdf-vm/asdf) for that.
 
 Building:
@@ -12,9 +12,6 @@ Building:
 ```
 cd example_system
 mix deps.get &&
-pushd assets &&
-npm install &&
-popd &&
 mix compile
 ```
 
@@ -36,14 +33,14 @@ Building and starting for production (in the background):
 
 ```
 cd example_system
-./rebuild.sh
-./_build/prod/rel/system/bin/system start
+mix release --overwrite
+NODE_NAME=node1 ./_build/prod/rel/example_system/bin/example_system start
 ```
 
 Open the remote console:
 
 ```
-./_build/prod/rel/system/bin/system remote_console
+NODE_NAME=node1 ./_build/prod/rel/example_system/bin/example_system remote
 ```
 
 Hot upgrade with no downtime:
