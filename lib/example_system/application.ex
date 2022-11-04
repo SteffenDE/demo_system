@@ -4,9 +4,16 @@ defmodule ExampleSystem.Application do
   def start(_type, _args) do
     LoadControl.change_schedulers(1)
 
+    topologies = [
+      gossip: [
+        strategy: Cluster.Strategy.Gossip
+      ]
+    ]
+
     with {:ok, pid} <-
            Supervisor.start_link(
              [
+               {Cluster.Supervisor, [topologies, [name: ExampleSystem.ClusterSupervisor]]},
                {Phoenix.PubSub, name: ExampleSystem.PubSub},
                LoadControl.Supervisor,
                ExampleSystem.Metrics,

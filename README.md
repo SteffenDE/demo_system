@@ -25,9 +25,23 @@ Then, you can visit the following links:
   - http://localhost:4000/load
   - http://localhost:4000/services
 
+
+## Docker
+
+```
+docker build -t example_system .
+docker run --rm -p 4000:4000 -e NODE_NAME=node1 example_system
+```
+
+or as cluster
+
+```
+docker compose up
+```
+
 ## Demo
 
-Building and starting for production (in the background):
+Building and starting locally (production-like release):
 
 ```
 mix release --overwrite

@@ -1,0 +1,18 @@
+version: '3.9'
+
+services:
+  node1:
+    build: .
+    ports:
+      - 4000:4000
+    environment:
+      - NODE_NAME=node1
+      - CLUSTER_LOCAL=false
+
+  node2:
+    build: .
+    ports:
+      - 4001:4000
+    environment:
+      - NODE_NAME=node2
+      - CLUSTER_LOCAL=false

@@ -60,16 +60,7 @@ defmodule ExampleSystemWeb do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {ExampleSystemWeb.LayoutView, "live.html"}
-
-      unquote(view_helpers())
-    end
-  end
-
-  def box_live_view do
-    quote do
-      use Phoenix.LiveView,
-        layout: {ExampleSystemWeb.LayoutView, "live_box.html"}
+        layout: {ExampleSystemWeb.LayoutView, :live}
 
       unquote(view_helpers())
     end

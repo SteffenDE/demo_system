@@ -12,7 +12,12 @@ defmodule ExampleSystem.Mixfile do
       deps: deps(),
       preferred_cli_env: [release: :prod, "system.upgrade": :prod, "system.node2": :prod],
       aliases: [
-        release: ["tailwind default --minify", "phx.digest", "release"]
+        release: [
+          "esbuild default --minify",
+          "tailwind default --minify",
+          "phx.digest",
+          "release"
+        ]
       ]
     ]
   end
@@ -48,7 +53,8 @@ defmodule ExampleSystem.Mixfile do
       {:recon, "~> 2.0"},
       {:jason, "~> 1.0"},
       {:swarm, "~> 3.0"},
-      {:phoenix_live_view, "~> 0.17.11"},
+      {:libcluster, "~> 3.3"},
+      {:phoenix_live_view, "~> 0.18"},
       {:floki, ">= 0.30.0", only: :test},
       {:esbuild, "~> 0.4", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.1.9", runtime: Mix.env() == :dev},
